@@ -1,17 +1,5 @@
-export interface Document {
-  id: string;
-  path: string;
-  title: string;
-  content: string;
-  contentType: string;
-  size: number;
-  modifiedAt: Date;
-  createdAt: Date;
-  metadata: Record<string, any>;
-}
-
 export interface SearchResult {
-  document: Document;
+  uri: string;
   score: number;
   snippet: string;
   highlights: Array<{
@@ -39,13 +27,41 @@ export interface IndexStats {
   indexedPaths: string[];
 }
 
+export interface IndexerConfig {
+  module: 'lmdb' | 'opensearch' | 'sqlite3-fts5';
+  options?: Record<string, any>;
+}
+
+export interface DocumentLoader {
+  module: string; // e.g., 'pdf-loader', 'markdown-loader'
+  extensions: string[]; // e.g., ['.pdf', '.md']
+  options: Record<string, any>;
+  priority?: number;
+}
+
+export interface DocumentSource {
+  module: string; // e.g., 'local-filesystem', 'web-crawler'
+  options?: Record<string, any>;
+}
+
+export interface LocalFilesystemSourceOptions extends DocumentSource {
+  module: 'fs',
+  options: {
+    paths: string[];
+    ignorePatterns?: string[];
+    recursive?: boolean;
+  }
+}
+
 export interface ConfigData {
-  searchPaths: string[];
-  excludePatterns: string[];
+  sources: DocumentSource[];
   hotkey: string;
-  theme: 'light' | 'dark' | 'system';
+  indexDebounceDelay?: number; // seconds to wait after file changes before reindexing
   maxResults: number;
-  indexingEnabled: boolean;
+  indexers: IndexerConfig[];
+  documentLoaders: DocumentLoader[];
+  readOnly: boolean;
+  enableUnixSocket?: boolean;
 }
 
 export interface IpcEvents {

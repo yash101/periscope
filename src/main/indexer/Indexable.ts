@@ -7,6 +7,7 @@ export class Section {
   type: string = '';
   content: string = '';
   weight: number = 1;
+  meta: Record<string, string> | undefined; // prefer undefined since jsons will be smaller
 }
 
 /**

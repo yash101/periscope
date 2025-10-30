@@ -28,6 +28,8 @@
   "license": "MIT",
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.13",
+    "@types/cheerio": "^0.22.35",
+    "@types/markdown-it-emoji": "^3.0.1",
     "@types/node": "^20.0.0",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
@@ -43,9 +45,14 @@
     "wait-on": "^7.0.0"
   },
   "dependencies": {
+    "@mdit/plugin-dl": "^0.22.1",
+    "@vscode/sqlite3": "^5.1.8-vscode",
     "autoprefixer": "^10.4.0",
     "better-sqlite3": "^9.6.0",
+    "cheerio": "^1.1.2",
     "chokidar": "^3.5.3",
+    "markdown-it": "^14.1.0",
+    "markdown-it-emoji": "^3.0.0",
     "postcss": "^8.4.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",

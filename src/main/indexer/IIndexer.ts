@@ -1,3 +1,4 @@
+import { SearchResult } from "../../shared/types";
 import { Indexable } from "./Indexable";
 
 export class IIndexer {
@@ -9,7 +10,7 @@ export class IIndexer {
     throw new Error("Method not implemented.");
   }
 
-  async search(query: string): Promise<Indexable[]> {
+  async search(query: string): Promise<SearchResult[]> {
     throw new Error("Method not implemented.");
   }
 }

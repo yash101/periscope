@@ -1,4 +1,6 @@
-import { Document } from '../../shared/types';
+import { DocumentLoader } from '../../shared/types';
+import { FilePayload } from '../fetcher/IFetcher';
+import { Indexable } from '../indexer/Indexable';
 
 export interface LoaderResult {
   content: string;
@@ -7,12 +9,6 @@ export interface LoaderResult {
 }
 
 export abstract class ILoader {
-  abstract getFileExtensions(): string[];
-  abstract canLoad(filePath: string): boolean;
-  abstract load(filePath: string): Promise<LoaderResult>;
-  
-  protected extractTitle(filePath: string, content?: string): string {
-    const basename = filePath.split('/').pop() || '';
-    return basename.replace(/\.[^/.]+$/, '');
-  }
+  abstract open(config: DocumentLoader): Promise<void>;
+  abstract extract(file: FilePayload, indexable: Indexable): Promise<LoaderResult>;
 }
