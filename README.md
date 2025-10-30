@@ -1,33 +1,69 @@
 # Periscope
 
-A lightweight local search app for code, notes, and documents built with Electron, SQLite FTS5, and React.
+Periscope is a lightweight, local search app for your code, notes, documents and literally anything you can throw at it.
+Build with a modular architecture, it leverages Electron for cross-platform desktop support.
+
+## Overview
+
+Currently being built and supported:
+* Electron: UI
+* SQLite FTS5: Full-text search engine
+* React (Vite): Frontend UI
+* TypeScript: Codebase
+* Supported document types:
+  * Markdown (.md)
+  * Jupyter Notebooks (.ipynb)
+  * Plain text (.txt)
+  * HTML (.html, .htm, etc.)
+* Supported platforms:
+  * macOS
+  * Windows
+  * Linux
+* Supported document discovery / crawling:
+  * Local filesystem crawling
+    * File watching for automatic re-indexing on changes
 
 ## Features
 
 - **Lightning-fast full-text search** powered by SQLite FTS5
 - **Local-only** - no cloud dependencies, ITAR-friendly
+  * It's possible to add cloud features later:
+    * Cloud sync (e.g., Dropbox, Google Drive)
+    * Cloud search (e.g., Elasticsearch, Algolia)
+    * Cloud crawling (e.g., Google Drive, OneDrive, GitHub, etc.)
 - **Cross-platform** - works on macOS, Windows, and Linux
 - **Tray-based interface** - quick access via global hotkey (Cmd+Shift+Space)
-- **Document loaders** for Markdown (.md) and Jupyter notebooks (.ipynb)
+- **Document loaders**
+  * In progress:
+    * Plain text (.txt)
+    * HTML (.html, .htm, etc.)
+    * Markdown (.md)
+    * Jupyter Notebooks (.ipynb)
+  * Planned:
+    * PDF (.pdf)
+    * Microsoft Word (.docx)
+    * Rich Text Format (.rtf)
+    * Code files, via Doxygen (.js, .py, .java, etc.)
+    * Emails (.eml, .msg)
+    * Images, via OCR or annotation (.png, .jpg, .tiff, etc.)
+    * Others as requested
 - **File watching** - automatic indexing of file changes
-- **Extensible architecture** - easy to add new document types
 
 ## Architecture
-
-```
+```text
 src/
-├── main/              # Electron main process
-│   ├── database/      # SQLite database management
-│   ├── indexer/       # File indexing and watching
-│   ├── loaders/       # Document type loaders
-│   ├── config/        # Configuration management
-│   └── utils/         # Logging and utilities
-├── preload/           # Electron preload scripts
-├── renderer/          # React UI components
-└── shared/            # Shared TypeScript types
+├── config/            # Application and environment configuration
+├── extractor/         # Content extraction (text, OCR, metadata)
+├── fetcher/           # Document fetchers (local, HTTP, cloud APIs)
+├── indexer/           # Indexing (SQLite + FTS5), LMDB (yash's custom search engine teehee), OpenSearch, etc.
+├── integration/       # Integrations with external services
+├── launch/            # App startup, CLI, and bootstrap code (to be merged with periscope/)
+├── loaders/           # Document loaders/parsers for supported formats
+├── periscope/         # Core orchestration and domain logic
+└── utils/             # Shared utilities, logging, and helpers
 ```
 
-## Setup
+## Setup (this probably needs to be updated later)
 
 1. **Install dependencies:**
    ```bash
@@ -50,7 +86,7 @@ src/
    npm run package
    ```
 
-## Configuration
+## Configuration (this probably needs to be updated later)
 
 Periscope stores its configuration and data in `~/.periscope/`:
 
@@ -58,7 +94,7 @@ Periscope stores its configuration and data in `~/.periscope/`:
 - `index.db` - SQLite database with FTS5 search index
 - `log/` - Application logs
 
-### Default Configuration
+### Default Configuration (ignore this, check the code. it'll also install the default config on first run)
 
 ```json
 {
@@ -74,38 +110,14 @@ Periscope stores its configuration and data in `~/.periscope/`:
 ## Document Loaders
 
 ### Markdown Loader
-- Supports `.md` and `.markdown` files
-- Extracts titles from H1 headers or frontmatter
-- Indexes clean text content
-- Extracts metadata: headings, links, word count
+* Renders markdown to HTML
+* Calls the HTML extractor to get clean and structured text for indexing
+
 
 ### Jupyter Loader
-- Supports `.ipynb` files
-- Indexes both markdown and code cells
-- Includes output text from executed cells
-- Extracts metadata: cell counts, kernel info
-
-### Adding New Loaders
-
-1. Create a new loader class extending `ILoader`
-2. Implement required methods: `getFileExtensions()`, `canLoad()`, `load()`
-3. Register it in `LoaderRegistry`
-
-```typescript
-export class MyLoader extends ILoader {
-  getFileExtensions(): string[] {
-    return ['.ext'];
-  }
-
-  canLoad(filePath: string): boolean {
-    return filePath.endsWith('.ext');
-  }
-
-  async load(filePath: string): Promise<LoaderResult> {
-    // Implementation
-  }
-}
-```
+* Renders Jupyter Notebooks to markdown and code snippets
+* Calls the markdown and code extractors to get clean and structured text for indexing
+* Probably will do more things later, I love Jupyter notebooks so this plugin will receive some love
 
 ## Global Hotkey
 
@@ -136,7 +148,11 @@ The default hotkey `Cmd+Shift+Space` (or `Ctrl+Shift+Space` on Windows/Linux) op
 4. Add tests if applicable
 5. Submit a pull request
 
+## Motivation
+
+I can't tell if I have too much code or Alzheimer's. Either way, hopefully this project solves that issue.
+
 ## License
 
-MIT License - see LICENSE file for details
-I can't tell if I have too much code or Alzheimer's. Either way, hopefully this project solves that issue.
+AGPLv3 - see LICENSE file for details
+

@@ -26,13 +26,13 @@ export class Sqlite3FTS5Indexer extends IIndexer {
     });
 
     // Set PRAGMA options
-    this.db.run(`PRAGMA mmap_size = ${this.options.mmapSize};`);
-    this.db.run(`PRAGMA cache_size = ${this.options.cacheSize};`);
-    this.db.run(`PRAGMA temp_store = ${this.options.tempStore === 'memory' ? 2 : 0};`);
-    this.db.run(`PRAGMA locking_mode = ${this.options.lockingMode};`);
+    await runAsyncQuery(this.db, `PRAGMA mmap_size = ${this.options.mmapSize};`);
+    await runAsyncQuery(this.db, `PRAGMA cache_size = ${this.options.cacheSize};`);
+    await runAsyncQuery(this.db, `PRAGMA temp_store = ${this.options.tempStore === 'memory' ? 2 : 0};`);
+    await runAsyncQuery(this.db, `PRAGMA locking_mode = ${this.options.lockingMode};`);
 
     // Create documents table and FTS5 virtual table if not exists
-    runAsyncQuery(this.db, `
+    await runAsyncQuery(this.db, `
       CREATE VIRTUAL TABLE IF NOT EXISTS documents_fts USING fts5(
         uri UNINDEXED,
         title,
@@ -41,7 +41,7 @@ export class Sqlite3FTS5Indexer extends IIndexer {
       )
     `);
 
-    runAsyncQuery(this.db, `
+    await runAsyncQuery(this.db, `
       CREATE TABLE IF NOT EXISTS documents (
         uri TEXT PRIMARY KEY,
         hash TEXT NOT NULL,
@@ -51,16 +51,16 @@ export class Sqlite3FTS5Indexer extends IIndexer {
       )
     `);
 
-    runAsyncQuery(this.db, `
+    await runAsyncQuery(this.db, `
       CREATE VIEW IF NOT EXISTS reindex_queue AS
         SELECT d.uri
         FROM documents d
         LEFT JOIN documents_fts fts ON fts.uri = d.uri
         WHERE d.hash IS NULL
-          OR d.last_indexed IS LT strftime('%s', 'now', '-30 days')
+          OR d.last_indexed < strftime('%s', 'now', '-30 days')
           OR fts.uri IS NULL
     `, [
-    ])
+    ]);
   }
 
   async close(): Promise<void> {
