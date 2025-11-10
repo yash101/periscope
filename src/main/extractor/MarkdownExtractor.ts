@@ -4,7 +4,7 @@ import { dl } from '@mdit/plugin-dl';
 import { full as emoji } from 'markdown-it-emoji';
 import { Section } from '../indexer/Indexable';
 
-export class MarkdownRenderer {
+export class MarkdownExtractor {
   private md: markdownit;
 
   constructor() {
@@ -13,8 +13,9 @@ export class MarkdownRenderer {
       .use(emoji);
   }
 
-  render(markdown: string): Section[] {
-    this.md.render(markdown);
+  async extract(markdown: string): Promise<Section[]> {
+    const result = this.md.render(markdown);
+    // Ooh forgot I need to parse the HTML into sections
     return [];
   }
 }

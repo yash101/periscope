@@ -16,9 +16,10 @@ export class Section {
  * Indexable objects contain structured data which should be indexed for search and retrieval.
  */
 export class Indexable {
-  id?: number;
-  uri?: string;
-  sections: Section[] = [];
-  weight: number = 1;
-  metadata: Record<string, string> = {};
+  id?: number;          /// Unique identifier for the indexable entity
+  uri?: string;         /// URI of the indexable entity.
+  sections: Section[] = []; /// Contains the content to be indexed, structured into a machine-contextual format.
+  weight: number = 1;     /// Weight of the entire indexable. Normally 1.
+  modified?: number;      /// last modified timestamp, UNIX epoch seconds
+  metadata: Record<string, string> = {};  /// Additional metadata as key-value pairs.
 }

@@ -3,9 +3,8 @@ import { FilePayload } from '../fetcher/IFetcher';
 import { Indexable } from '../indexer/Indexable';
 
 export interface LoaderResult {
-  content: string;
-  title: string;
-  metadata: Record<string, any>;
+  status: 'success' | 'failure';
+  errorMessage?: string;
 }
 
 export abstract class ILoader {

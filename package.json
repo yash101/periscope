@@ -46,6 +46,7 @@
   },
   "dependencies": {
     "@mdit/plugin-dl": "^0.22.1",
+    "@parcel/watcher": "^2.5.1",
     "@vscode/sqlite3": "^5.1.8-vscode",
     "autoprefixer": "^10.4.0",
     "better-sqlite3": "^9.6.0",
