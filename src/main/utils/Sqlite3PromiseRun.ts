@@ -1,10 +1,13 @@
 import type { Database, RunResult } from "@vscode/sqlite3";
 
 export function runAsyncQuery(
-  db: Database,
+  db: Database | null,
   sql: string,
   params: any[] = []
 ): Promise<RunResult> {
+  if (!db)
+    throw new Error('Database not initialized.');
+
   return new Promise<RunResult>((resolve, reject) => {
     db.run(sql, params, function (this: RunResult, err: Error | null) {
       if (err) {
@@ -17,10 +20,13 @@ export function runAsyncQuery(
 }
 
 export function allAsyncQuery<T>(
-  db: Database,
+  db: Database | null,
   sql: string,
   params: any[] = []
 ): Promise<T[]> {
+  if (!db)
+    throw new Error('Database not initialized.');
+
   return new Promise<T[]>((resolve, reject) => {
     db.all(sql, params, (err: Error | null, rows: T[]) => {
       if (err) {

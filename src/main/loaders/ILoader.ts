@@ -1,5 +1,5 @@
 import { DocumentLoader } from '../../shared/types';
-import { FilePayload } from '../fetcher/IFetcher';
+import { FilePayload } from '../crawler/ICrawler';
 import { Indexable } from '../indexer/Indexable';
 
 export interface LoaderResult {

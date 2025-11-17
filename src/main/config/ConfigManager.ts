@@ -176,7 +176,7 @@ export class ConfigManager {
   }
 
   get(): ConfigData {
-    return { ...this.config };
+    return this.config;
   }
 
   private getDefaultConfig(): ConfigData {

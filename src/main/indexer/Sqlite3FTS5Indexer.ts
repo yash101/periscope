@@ -1,9 +1,9 @@
 import { IndexerConfig, SearchResult } from "../../shared/types";
 import { allAsyncQuery, runAsyncQuery } from "../utils/Sqlite3PromiseRun";
 import { IIndexer } from "./IIndexer";
+import { Indexable } from "./Indexable";
 
 import sqlite3 from "@vscode/sqlite3";
-import { Indexable } from "./Indexable";
 
 interface FTS5ResultsRow {
   uri: string;

@@ -48,6 +48,7 @@
     "@mdit/plugin-dl": "^0.22.1",
     "@parcel/watcher": "^2.5.1",
     "@vscode/sqlite3": "^5.1.8-vscode",
+    "@yash101/mimo": "^0.1.2",
     "autoprefixer": "^10.4.0",
     "better-sqlite3": "^9.6.0",
     "cheerio": "^1.1.2",

@@ -17,10 +17,10 @@ export async function loadIndexers(config: IndexerConfig[]): Promise<IIndexer[]>
           const sqliteIndexer = new Sqlite3FTS5Indexer();
           sqliteIndexer.open(cfg as any); // Type casting for simplicity
           return sqliteIndexer;
-        case 'lmdb':
-          const lmdbIndexer = new LmdbIndexer();
-          lmdbIndexer.open(cfg as any); // Type casting for simplicity
-          return lmdbIndexer;
+        // case 'lmdb':
+        //   const lmdbIndexer = new LmdbIndexer();
+        //   lmdbIndexer.open(cfg as any); // Type casting for simplicity
+        //   return lmdbIndexer;
         default:
           console.warn(`Unknown indexer module: ${cfg.module}`);
           return null;

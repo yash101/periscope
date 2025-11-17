@@ -37,7 +37,7 @@ export class FilePayload {
   }
 }
 
-export abstract class IFetcher {
+export abstract class ICrawler {
   abstract open(config: DocumentSource, checkpoint: any): Promise<void>;
   abstract crawl(): AsyncGenerator<FilePayload>;
   abstract close(): Promise<void>;

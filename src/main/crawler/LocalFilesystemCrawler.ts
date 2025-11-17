@@ -1,12 +1,12 @@
 import { DocumentSource } from "../../shared/types";
 import { delay } from "../utils/Delay";
-import { FilePayload, hashFilePayload, IFetcher } from "./IFetcher";
+import { FilePayload, hashFilePayload, ICrawler } from "./ICrawler";
 import fs from 'fs/promises';
 import path from 'path';
 import watcher, { AsyncSubscription } from '@parcel/watcher';
 
-export class LocalFilesystemFetcher extends IFetcher {
-  private config!: LocalFilesystemFetcherConfig;
+export class LocalFilesystemCrawler extends ICrawler {
+  private config!: LocalFilesystemCrawlerConfig;
   private paths: string[] = [];
   private queue: string[] = [];
   private watchers: AsyncSubscription[] = [];
@@ -14,7 +14,7 @@ export class LocalFilesystemFetcher extends IFetcher {
   private emptyBuffer = Buffer.from([]);
   private hasFinished: boolean = false;
 
-  async open(config: LocalFilesystemFetcherConfig, checkpoint: any): Promise<void> {
+  async open(config: LocalFilesystemCrawlerConfig, checkpoint: any): Promise<void> {
     this.config = config;
 
     // Enforce defaults
@@ -130,7 +130,7 @@ export class LocalFilesystemFetcher extends IFetcher {
   }
 }
 
-export interface LocalFilesystemFetcherConfig extends DocumentSource {
+export interface LocalFilesystemCrawlerConfig extends DocumentSource {
   options: {
     paths: string | string[];
     delay: number | null | undefined;

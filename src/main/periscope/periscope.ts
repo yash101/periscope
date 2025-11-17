@@ -1,40 +1,56 @@
+/**
+ * Architecture:
+ * Fetcher -> [We create an Indexable object] -> Loader -> Indexer
+ */
 
-/*
-Architecture:
-Fetcher -> [We create an Indexable object] -> Loader -> Indexer
-*/
-
-import { FilePayload, IFetcher } from "../fetcher/IFetcher";
-import { Indexable } from '../indexer/Indexable';
-import { ILoader } from "../loaders/ILoader";
+import { ConfigManager } from "../config/ConfigManager";
+import { getCrawlerFromConfig } from "../crawler/CrawlerFactory";
+import { SearchEngine } from "./engine";
 
 export class Periscope {
-  private fetchers: IFetcher[] = [];
-  private loaders: ILoader[] = [];
-  private loaderMap: Map<string, ILoader> = new Map(); // Map file extension to loader
+  configManager: ConfigManager | null = null;
+  searchEngine: SearchEngine | null = null;
 
-  addFetcher(fetcher: IFetcher) {
-    this.fetchers.push(fetcher);
-    fetcher.onUpdate((file) => {
-    });
+  constructor() {
   }
 
-  addLoader(loader: ILoader, extensions: string[]) {
-    // TODO: add loaders
+  // Start all components
+  run(): void {
+    // Will load config internally
+    this.configManager = new ConfigManager();
+
+    // Start components
+    this.searchEngine = new SearchEngine();
+    this.searchEngine.open(this.configManager.get());
+
+    // Load crawlers
+    this.loadCrawlers();
+
+    // Load document loaders
+    this.loadDocumentLoaders();
+
+    // Load annotators
+
+    // Load indexers
   }
 
-  async indexFile(file: FilePayload) {
-    const indexable: Indexable = new Indexable();
-    indexable.uri = file.uri;
+  loadCrawlers(): void {
+    const config = this.configManager?.get();
 
-    // Determine appropriate loader based on file extension
-    const fileExtension = file.uri.split('.').pop() || '';
-    if (!this.loaderMap.has(`.${fileExtension}`)) {
-      console.warn(`No loader found for file extension: .${fileExtension}`);
-      return;
+    if (!config) {
+      throw new Error("ConfigManager not initialized");
     }
-    const loader: ILoader = this.loaderMap.get(`.${fileExtension}`)!;
 
-    await loader.extract(file, indexable);
+    // Load crawlers from config
+    for (const crawlerCfg of (config.sources || [])) {
+      const crawler = getCrawlerFromConfig(crawlerCfg);
+      if (crawler) {
+        this.searchEngine?.addFetcher(crawler);
+      }
+    }
+  }
+
+  loadDocumentLoaders(): void {
+
   }
 }
